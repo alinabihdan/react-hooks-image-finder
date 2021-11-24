@@ -1,43 +1,34 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
 import SearchBar from 'components/SearchBar';
 import ImageGallery from 'components/ImageGallery';
 import Modal from './components/Modal';
 
-class App extends Component {
-  state = {
-    query: '',
-    showModal: false,
-    modalImage: '',
+function App() {
+  const [query, setQuery] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalImage, setModalImage] = useState('');
+
+  const openModal = modalImage => {
+    setShowModal(true);
+    setModalImage(modalImage);
   };
 
-  showModal = modalImage => {
-    this.setState({ showModal: true, modalImage });
+  const handleFormSubmit = query => {
+    setQuery(query);
   };
 
-  closeModal = () => {
-    this.setState({ showModal: false });
-  };
-
-  handleFormSubmit = query => {
-    this.setState({ query });
-  };
-
-  render() {
-    const { query, showModal, modalImage } = this.state;
-
-    return (
-      <div className="App">
-        {showModal && (
-          <Modal modalImage={modalImage} onClose={this.closeModal} />
-        )}
-        <SearchBar onSubmit={this.handleFormSubmit} />
-        <ImageGallery query={query} onClick={this.showModal} />
-        <ToastContainer autoClose={3000} />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      {showModal && (
+        <Modal modalImage={modalImage} onClose={() => setShowModal(false)} />
+      )}
+      <SearchBar onSubmit={handleFormSubmit} />
+      <ImageGallery query={query} onClick={openModal} />
+      <ToastContainer autoClose={3000} />
+    </div>
+  );
 }
 
 export default App;
